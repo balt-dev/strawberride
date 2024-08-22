@@ -1,0 +1,9 @@
+[package]
+name = "strawberride"
+version = "0.1.0"
+edition = "2021"
+description = "A Celeste map serializer and deserializer."
+
+[dependencies]
+byteorder = "1"
+itertools = "0.13"
