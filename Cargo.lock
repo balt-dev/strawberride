@@ -53,7 +53,7 @@ dependencies = [
 
 [[package]]
 name = "strawberride"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "byteorder",
  "indent_write",

@@ -28,10 +28,10 @@ for level in map.levels.iter_mut() {
 
     for y in 0..(height / 2) {
         for x in 0..width {
-            let src = *tilemap.get(x, y).unwrap();
-            let dst = *tilemap.get(width - x - 1, height - y - 1).unwrap();
-            *tilemap.get_mut(x, y).unwrap() = dst;
-            *tilemap.get_mut(width - x - 1, height - y - 1).unwrap() = src;
+            let src = tilemap[(x, y)];
+            let dst = tilemap[(width - x - 1, height - y - 1)];
+            tilemap[(x, y)] = dst;
+            tilemap[(width - x - 1, height - y - 1)] = src;
         }
     }
 }

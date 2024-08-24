@@ -19,5 +19,6 @@ fn round_trip_real_data() -> Result<(), Box<dyn Error>> {
         // assert_eq prints out both structs, which prints like 8 MB of text to the console
         panic!("round trip equality failed")
     }
+    
     Ok(())
 }
