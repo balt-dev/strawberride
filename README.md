@@ -1,5 +1,11 @@
 # strawberride
 
+![Passing Tests](https://img.shields.io/badge/tests-passing-success.svg)
+[![Documentation](https://docs.rs/strawberride/badge.svg)](https://docs.rs/strawberride)
+[![Repository](https://img.shields.io/badge/-GitHub-%23181717?style=flat&logo=github&labelColor=%23555555&color=%23181717)](https://github.com/balt-dev/strawberride)
+[![Latest version](https://img.shields.io/crates/v/strawberride.svg)](https://crates.io/crates/strawberride)
+[![License](https://img.shields.io/crates/l/strawberride.svg)](https://github.com/balt-dev/strawberride/blob/trunk/LICENSE)
+![Maintenance](https://img.shields.io/maintenance/passively-developed/2024?color=ok)
 
 This is a library for loading and saving Celeste maps from files,
 including high-level representations of map objects like
