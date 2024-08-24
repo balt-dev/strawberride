@@ -1,10 +1,10 @@
 use std::{
-    error::Error,
-    io::{Cursor, Seek, SeekFrom}
+    error::Error, io::{Cursor, Seek, SeekFrom}
 };
 
 use strawberride::Map;
 
+// file not included
 static TEST_MAP: &[u8] = include_bytes!(r"9D.bin");
 
 #[test]

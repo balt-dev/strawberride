@@ -1,6 +1,5 @@
-use std::io::{self, Cursor, Seek, Write};
-use byteorder::{LittleEndian, NativeEndian, ReadBytesExt, WriteBytesExt};
-use indexmap::IndexSet;
+use std::io::{self, Cursor, Seek};
+use byteorder::{LittleEndian, ReadBytesExt, WriteBytesExt};
 use itertools::Itertools;
 
 use crate::LoadError;
@@ -18,7 +17,7 @@ pub trait WriteExt {
     fn write_variable_length_int(&mut self, int: usize) -> io::Result<()>;
 }
 
-impl ReadExt for dyn io::Read + '_ {
+impl<T: io::Read + ?Sized> ReadExt for T {
     /// Gets a variably-long integer from the file.
     fn read_variable_length_int(&mut self) -> io::Result<usize> {
         let mut result = 0;
@@ -71,7 +70,7 @@ impl ReadExt for dyn io::Read + '_ {
     }
 }
 
-impl WriteExt for dyn io::Write + '_ {
+impl<T: io::Write + ?Sized> WriteExt for T {
     fn write_rle_string(&mut self, str: &str) -> io::Result<()> {
         let mut buf = Cursor::new(Vec::<u8>::new());
         let mut last_byte = None;

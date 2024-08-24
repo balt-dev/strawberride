@@ -1,9 +1,8 @@
 #[cfg(target_pointer_width = "16")]
 compile_error!("tilemaps cannot properly function when usize is less than 32 bytes long");
 
-use std::{cmp::Ordering, collections::HashMap, iter, ops::{Index, IndexMut}};
+use std::{cmp::Ordering, iter, ops::{Index, IndexMut}};
 use itertools::Itertools;
-use crate::{Element, LoadError, Value};
 
 mod seal {
     pub trait TilemapCell: Copy {
@@ -24,10 +23,9 @@ mod seal {
 
 use seal::TilemapCell;
 
-use crate::MapElement;
 
 #[derive(Clone, PartialEq, Eq, Default, Hash)]
-/// A 2-dimensional tilemap.
+/// A 2-dimensional tilemap for use in Celeste levels.
 
 // Safety contracts:
 // width * height <= usize::MAX

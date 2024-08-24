@@ -4,6 +4,8 @@ use std::collections::HashMap;
 use crate::{Element, Tilemap, Value};
 
 #[derive(Debug, Clone, PartialEq, Default)]
+/// A Celeste custom map.
+#[allow(missing_docs)]
 pub struct Map {
     pub package: String, // package
     pub filler: Vec<Filler>, // Filler
@@ -17,12 +19,16 @@ pub struct Map {
 
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+/// A filler rectangle.
+#[allow(missing_docs)]
 pub struct Filler { // Filler
     pub position: (i32, i32), // x, y
     pub size: (i32, i32), // w, h
 }
 
 #[derive(Debug, Clone, PartialEq, Default)]
+/// A single level within a map.
+#[allow(missing_docs)]
 pub struct Level {
     pub name: String, // name
     pub data: LevelData, 
@@ -40,6 +46,8 @@ pub struct Level {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+/// A struct that holds the (large amount of) metadata within a [`Level`].
+#[allow(missing_docs)]
 pub struct LevelData {
     pub position: (i32, i32), // x, y
     pub size: (i32, i32), // width, height
@@ -62,6 +70,8 @@ pub struct LevelData {
 }
 
 #[derive(Debug, Clone, PartialEq, Default)]
+/// An entity inside a [`Level`].
+#[allow(missing_docs)]
 pub struct Entity {
     pub name: String, // element name
     pub id: i32, // id
@@ -74,6 +84,8 @@ pub struct Entity {
 }
 
 #[derive(Debug, Clone, PartialEq, Default)]
+/// A decal inside a [`Level`].
+#[allow(missing_docs)]
 pub struct Decal {
     pub position: (f32, f32), // x,
     pub scale: (f32, f32), // scaleX, scaleY

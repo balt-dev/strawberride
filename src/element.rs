@@ -1,4 +1,4 @@
-use std::{borrow::Cow, collections::HashMap, fmt::Write, io::{self, Read, Write as _}};
+use std::{borrow::Cow, collections::HashMap, fmt::Write, io};
 
 use byteorder::{LittleEndian, ReadBytesExt as _, WriteBytesExt};
 use indexmap::IndexSet;
@@ -10,10 +10,15 @@ use crate::{ext::{ReadExt as _, WriteExt as _}, LoadError};
 /// A value that can appear in the attributes of an element.
 #[derive(Clone, PartialEq, Debug)]
 pub enum Value {
+    /// A boolean value.
     Boolean(bool),
+    /// An integer.
     Integer(i32),
+    /// A floating-point value.
     Float(f32),
+    /// A string.
     String(String),
+    /// A string, specifically written in run-length encoding.
     RleString(String),
 }
 
