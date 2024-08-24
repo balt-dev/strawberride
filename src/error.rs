@@ -2,6 +2,7 @@ use std::{fmt, io, string::FromUtf8Error};
 
 
 #[derive(Debug)]
+#[non_exhaustive]
 /// Something that can go wrong when loading a map.
 pub enum LoadError {
     /// The map header was invalid.
@@ -56,5 +57,22 @@ impl From<io::Error> for LoadError {
 impl From<FromUtf8Error> for LoadError {
     fn from(err: FromUtf8Error) -> Self {
         io::Error::new(io::ErrorKind::InvalidData, err.utf8_error()).into()
+    }
+}
+
+impl LoadError {
+    /// Tries to clone the [`LoadError`], returning [`None`] if it cannot be cloned.
+    pub fn try_clone(&self) -> Option<Self> {
+        Some( match self {
+            LoadError::InvalidHeader(h) => LoadError::InvalidHeader(h.clone()),
+            LoadError::InvalidString(s) => LoadError::InvalidString(*s),
+            LoadError::InvalidValueType(t) => LoadError::InvalidValueType(*t),
+            LoadError::MissingElement(el) => LoadError::MissingElement(*el),
+            LoadError::InvalidFieldType(name, v) => LoadError::InvalidFieldType(*name, v.clone()),
+            LoadError::InvalidFieldData(name, d) => LoadError::InvalidFieldData(*name, d.clone()),
+            LoadError::InvalidElementName(name, expected) => LoadError::InvalidElementName(name.clone(), *expected),
+
+            LoadError::IoError(_) => return None
+        } )
     }
 }

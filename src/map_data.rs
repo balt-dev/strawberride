@@ -1,15 +1,16 @@
 
 use std::collections::HashMap;
 
-use itertools::Itertools;
-
-use crate::{Element, Value, LoadError};
+use crate::{Element, Tilemap, Value};
 
 #[derive(Debug, Clone, PartialEq, Default)]
 pub struct Map {
     pub package: String, // package
     pub filler: Vec<Filler>, // Filler
     pub levels: Vec<Level>, // levels
+    pub foregrounds: Vec<Element>, // Style::Foregrounds
+    pub backgrounds: Vec<Element>, // Style::Backgrounds
+    pub bg_color: Option<[u8; 4]>, // Style.color
     pub extra_data: HashMap<String, Value>,
     pub extra_children: Vec<Element>
 }
@@ -21,60 +22,19 @@ pub struct Filler { // Filler
     pub size: (i32, i32), // w, h
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
-pub enum WindPattern {
-    Left,
-    Right,
-    LeftStrong,
-    RightStrong,
-    LeftOnOff,
-    RightOnOff,
-    LeftOnOffFast,
-    RightOnOffFast,
-    Alternating,
-    LeftGemsOnly,
-    RightCrazy,
-    Down,
-    Up,
-    Space,
-    Custom(String) // Thanks, Monika.
-}
-
-impl From<String> for WindPattern {
-    fn from(value: String) -> Self {
-        match value.as_str() {
-            "Left" => Self::Left,
-            "Right" => Self::Right,
-            "LeftStrong" => Self::LeftStrong,
-            "RightStrong" => Self::RightStrong,
-            "LeftOnOff" => Self::LeftOnOff,
-            "RightOnOff" => Self::RightOnOff,
-            "LeftOnOffFast" => Self::LeftOnOffFast,
-            "RightOnOffFast" => Self::RightOnOffFast,
-            "Alternating" => Self::Alternating,
-            "LeftGemsOnly" => Self::LeftGemsOnly,
-            "RightCrazy" => Self::RightCrazy,
-            "Down" => Self::Down,
-            "Up" => Self::Up,
-            "Space" => Self::Space,
-            _ => Self::Custom(value)
-        }
-    }
-}
-
 #[derive(Debug, Clone, PartialEq, Default)]
 pub struct Level {
     pub name: String, // name
     pub data: LevelData, 
-    pub entities: Vec<Entity>, // entities
-    pub triggers: Vec<Entity>, // triggers
-    pub bg_decals: Vec<Decal>, // bgdecals
-    pub fg_decals: Vec<Decal>, // fgdecals
-    pub bg: Vec<char>, // bg (RLE, Vec<char> is usually dumb but it's used here for the ability to index into and set things)
-    pub bgtiles: Vec<char>, // bgtiles (RLE) 
-    pub fgtiles: Vec<char>, // fgtiles (RLE)
-    pub objtiles: Vec<i32>, // objtiles (stored as comma separated numbers BUT STILL RLE FOR SOME REASON)
-    pub solids: Vec<char>, // solids (RLE)
+    pub entities: Vec<Entity>, // entities, optional
+    pub triggers: Vec<Entity>, // triggers, optional
+    pub bg_decals: Vec<Decal>, // bgdecals, optional
+    pub fg_decals: Vec<Decal>, // fgdecals, optional
+    pub bg: Tilemap<char>, // bg (RLE, Vec<char> is usually dumb but it's used here for the ability to index into and set things)
+    pub bg_tiles: Tilemap<i32>, // bgtiles
+    pub fg_tiles: Tilemap<i32>, // fgtiles
+    pub obj_tiles: Tilemap<i32>, // objtiles
+    pub solids: Tilemap<char>, // solids (RLE)
     pub extra_data: HashMap<String, Value>,
     pub extra_children: Vec<Element>
 }
@@ -89,7 +49,7 @@ pub struct LevelData {
     pub disable_down_transition: bool, // disableDownTransition
     pub music_progress: Option<i32>, // musicProgress (stored as string for some reason?)
     pub camera_offset: (i32, i32), // cameraOffsetX, cameraOffsetY
-    pub wind_pattern: Option<WindPattern>, // windPattern (stored as a string, None => "None")
+    pub wind_pattern: String, // windPattern
     pub ambience_progress: Option<i32>, // ambienceProgress (also stored as a string??)
     pub alt_music: String, // alt_music (confusingly not camelCase)
     pub ambience: String, // ambience
@@ -102,11 +62,12 @@ pub struct LevelData {
 }
 
 #[derive(Debug, Clone, PartialEq, Default)]
-// manual impl
 pub struct Entity {
+    pub name: String, // element name
     pub id: i32, // id
     pub position: (f32, f32), // x, y
-    pub size: (i32, i32), // width, height
+    pub width: Option<i32>, // width
+    pub height: Option<i32>, // width
     pub origin: (f32, f32), // originX, originY
     pub nodes: Vec<(f32, f32)>, // children (with name "node")
     pub values: HashMap<String, Value>
