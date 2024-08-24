@@ -3,6 +3,10 @@ name = "strawberride"
 version = "0.1.0"
 edition = "2021"
 description = "A Celeste map serializer and deserializer."
+authors = ["baltdev"]
+license = "MIT"
+documentation = "https://docs.rs/strawberride"
+repository = "https://github.com/balt-dev/strawberride"
 
 [dependencies]
 byteorder = "1"
