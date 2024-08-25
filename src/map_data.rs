@@ -45,6 +45,58 @@ pub struct Level {
     pub extra_children: Vec<Element>
 }
 
+impl Level {
+    /// Creates a new instance of a level.
+    /// 
+    /// Returns [`None`] if width or height are less than 0 or cause overflow.
+    /// 
+    /// Note: Due to the original level format using `i32` for these fields, these need to as well.
+    /// It's illogical, I know, but that's just how it is.
+    pub fn new(name: impl Into<String>, width: i32, height: i32) -> Option<Self> {
+        if !(width >= 0 && height >= 0) { return None; }
+        
+        Some( Level {
+            name: name.into(),
+            data: LevelData {
+                size: (width, height),
+                ..Default::default()
+            },
+            bg: Tilemap::new(width as usize, height as usize)?,
+            solids: Tilemap::new(width as usize, height as usize)?,
+            bg_tiles: Tilemap::new(width as usize, height as usize)?,
+            fg_tiles: Tilemap::new(width as usize, height as usize)?,
+            obj_tiles: Tilemap::new(width as usize, height as usize)?,
+            ..Default::default()
+        } )
+    }
+
+    /// Resizes the Level, also resizing its tilemaps.
+    /// 
+    /// Returns false if width or height are less than 0, or overflow occurs.
+    /// 
+    /// It is **highly recommended** that you use this instead of manually resizing the internal tilemaps.
+    pub fn resize(&mut self, width: i32, height: i32) -> bool {
+        if width < 0 || height < 0 { return false; }
+
+        self.bg.set_width(width as usize)
+            && self.bg.set_height(height as usize)
+            && self.solids.set_width(width as usize)
+            && self.solids.set_height(height as usize)
+            && self.obj_tiles.set_width(width as usize)
+            && self.obj_tiles.set_height(height as usize)
+            && self.fg_tiles.set_width(width as usize)
+            && self.fg_tiles.set_height(height as usize)
+            && self.bg_tiles.set_width(width as usize)
+            && self.bg_tiles.set_height(height as usize)
+            && {
+                self.data.size.0 = width;
+                self.data.size.1 = height;
+
+                true
+            }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 /// A struct that holds the (large amount of) metadata within a [`Level`].
 #[allow(missing_docs)]
@@ -87,7 +139,7 @@ pub struct Entity {
 /// A decal inside a [`Level`].
 #[allow(missing_docs)]
 pub struct Decal {
-    pub position: (f32, f32), // x,
+    pub position: (f32, f32), // x, y
     pub scale: (f32, f32), // scaleX, scaleY
     pub texture: String, // texture
     pub color: [u8; 4], // color
